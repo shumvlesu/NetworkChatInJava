@@ -1,4 +1,4 @@
-package sample;
+package sample.Server;
 
 public interface AuthService {
   void start();

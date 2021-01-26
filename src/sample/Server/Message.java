@@ -1,15 +1,15 @@
-package sample;
+package sample.Server;
 
 public class Message {
-  private String clientId;
+  private String nick;
   private String message;
 
-  public String getClientId() {
-    return clientId;
+  public String getNick() {
+    return nick;
   }
 
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
+  public void setNick(String nick) {
+    this.nick = nick;
   }
 
   public String getMessage() {
