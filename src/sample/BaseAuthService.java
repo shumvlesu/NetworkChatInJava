@@ -10,8 +10,8 @@ public class BaseAuthService implements AuthService {
   public BaseAuthService() {
       entries = new ArrayList<>();
       entries.add(new Entry("ivan", "123", "Neivanov"));
-      entries.add(new Entry("sharik", "123", "Gav"));
-      entries.add(new Entry("cat", "123", "murzik"));
+      entries.add(new Entry("sharik", "111", "Gav"));
+      entries.add(new Entry("cat", "321", "murzik"));
   }
 
   private class Entry{
@@ -41,6 +41,11 @@ public class BaseAuthService implements AuthService {
   @Override
   public String getNickByLoginAndPass(String login, String password) {
 
+    for (Entry entry : entries) {
+      if (login.equals(entry.login) && password.equals(entry.password)){
+        return entry.nick;
+      }
+    }
     return null;
   }
 }
