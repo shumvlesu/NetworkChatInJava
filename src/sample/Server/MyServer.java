@@ -36,6 +36,10 @@ public class MyServer {
     }
   }
 
+
+
+
+
   //Отправка сообщений всем доступным клиентам
   public synchronized void broadcastMessage(Message message) {
     for (ClientHandler client : clients) {
