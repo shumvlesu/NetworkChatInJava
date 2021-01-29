@@ -90,11 +90,14 @@ public class MyServer {
   //клиент входит в чат, заносим его в список
   public synchronized void subscribe(ClientHandler clientHandler) {
     clients.add(clientHandler);
+
+    broadcastClientsList();
   }
 
   //клиент выходит из чата
   public synchronized void unsubscribe(ClientHandler clientHandler) {
     clients.remove(clientHandler);
+    broadcastClientsList();
   }
 
 }
