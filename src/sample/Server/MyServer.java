@@ -90,7 +90,6 @@ public class MyServer {
   //клиент входит в чат, заносим его в список
   public synchronized void subscribe(ClientHandler clientHandler) {
     clients.add(clientHandler);
-
     broadcastClientsList();
   }
 
