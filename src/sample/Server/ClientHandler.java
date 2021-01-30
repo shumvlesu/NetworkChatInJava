@@ -31,7 +31,7 @@ public class ClientHandler {
           readMessages();
         } catch (IOException e) {
           e.printStackTrace();
-        }finally {
+        } finally {
           closeConnection();
         }
       }).start();
@@ -49,7 +49,7 @@ public class ClientHandler {
       try {
         AuthMessage message = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
         String nick = myServer.getAuthService().getNickByLoginAndPass(message.getLogin(), message.getPassword());
-        if (nick !=null && !myServer.isNickBusy(nick)){
+        if (nick != null && !myServer.isNickBusy(nick)) {
           message.setAuthenticated(true);
           dataOutputStream.writeUTF(new Gson().toJson(message));
           Message broadcastMsg = new Message();
@@ -65,15 +65,47 @@ public class ClientHandler {
       }
     }
   }
+
   private void readMessages() throws IOException {
     while (true) {
       Message message = new Gson().fromJson(dataInputStream.readUTF(), Message.class);
       message.setNick(nick);
       System.out.println(message);
-      if ("/end".equals(message.getMessage())){
-        return;
+//      if ("/end".equals(message.getMessage())){
+//        return;
+//      }
+      //если сообщение имеет "/" то либо это приватное соообщение либо команда выхода
+      //проверяем что у нас нет - "/"
+      if (!message.getMessage().startsWith("/")) {
+        //рассылаем сообщение всем пользовотелям чата
+        myServer.broadcastMessage(message);
+        continue;
       }
-      myServer.broadcastMessage(message);
+      //дошли до сюда - значит сообщение приватное или команда выхода
+      //разделяем строку сообщения на массив строк делиниатором выступает пробел
+      String[] tokens = message.getMessage().split("\\s");
+      //Первая чать сообщения до пробела
+      switch (tokens[0]) {
+        case "/end": {
+          return;
+        }
+        case "/w": { //пример сообщения - /w никнеймПользователя телоСообщения
+          //соответственно это 3 элемента массива tokens
+          //и меньше 3х не должно быть, если это не так говорим об этом пользователю
+          if (tokens.length < 3) {
+            Message msg = new Message();
+            msg.setMessage("Не хватает параметров, необходимо отправить команду следующего вида: /w <ник> <сообщение>");
+            this.sendMessage(msg);
+          }
+          //Сам момент отправки приватного сообщения
+          String nick = tokens[1];
+          String msg = tokens[2];
+          myServer.sendMsgToClient(this, nick, msg);
+          break;
+        }
+
+      }
+
     }
   }
 
@@ -92,7 +124,7 @@ public class ClientHandler {
   private void closeConnection() {
     myServer.unsubscribe(this);
     Message message = new Message();
-    message.setMessage(nick+" вышел из чата");
+    message.setMessage(nick + " вышел из чата");
     myServer.broadcastMessage(message);
     try {
       dataOutputStream.close();
