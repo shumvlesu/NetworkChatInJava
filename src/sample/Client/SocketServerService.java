@@ -16,8 +16,6 @@ public class SocketServerService implements ServerService {
   private DataOutputStream dataOutputStream;
   private DataInputStream dataInputStream;
   private boolean isConnected = false;
-  private final String login = "ivan";
-  private final String password = "123";
 
   public boolean isConnected() {
     return isConnected;
@@ -29,35 +27,23 @@ public class SocketServerService implements ServerService {
       socket = new Socket("localhost", MyServer.PORT);
       dataInputStream = new DataInputStream(socket.getInputStream());
       dataOutputStream = new DataOutputStream(socket.getOutputStream());
-
-
-      AuthMessage authMessage = new AuthMessage();
-      authMessage.setLogin(login);
-      authMessage.setPassword(password);
-      dataOutputStream.writeUTF(new Gson().toJson(authMessage));
-
-      authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
-      if (authMessage.isAuthenticated()) {
-        isConnected = true;
-      }
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
 
-//  public String authorization(String login, String password) throws IOException {
-//    AuthMessage authMessage = new AuthMessage();
-//    authMessage.setLogin(login);
-//    authMessage.setPassword(password);
-//    dataOutputStream.writeUTF(new Gson().toJson(authMessage));
-//
-//    authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
-//    if (authMessage.isAuthenticated()) {
-//      isConnected = true;
-//    }
-//    return authMessage.getNick();
-//  }
+  public String authorization(String login, String password) throws IOException {
+    AuthMessage authMessage = new AuthMessage();
+    authMessage.setLogin(login);
+    authMessage.setPassword(password);
+    dataOutputStream.writeUTF(new Gson().toJson(authMessage));
+
+    authMessage = new Gson().fromJson(dataInputStream.readUTF(), AuthMessage.class);
+    if (authMessage.isAuthenticated()) {
+      isConnected = true;
+    }
+    return authMessage.getNick();
+  }
 
   @Override
   public void closeConnection() {

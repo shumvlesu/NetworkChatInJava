@@ -28,7 +28,7 @@ public class MyClient extends JFrame {
     JTextArea mainChat = new JTextArea();
     mainChat.setSize(400, 250);
 
-    //initLoginPanel(mainChat);
+    initLoginPanel(mainChat);
 
     JTextField myMessage = new JTextField();
 
@@ -58,42 +58,42 @@ public class MyClient extends JFrame {
     add(jPanel);
   }
 
-//  private void initLoginPanel(JTextArea mainChat) {
-//    JTextField login = new JTextField();
-//    login.setToolTipText("Логин");
-//    JPasswordField password = new JPasswordField();
-//    password.setToolTipText("Пароль");
-//    JButton authButton = new JButton("Авторизоваться");
-//
-//    JLabel authLabel = new JLabel("Offline");
-//
-//    authButton.addActionListener(actionEvent -> {
-//      String lgn = login.getText();
-//      String psw = new String(password.getPassword());
-//
-//      if (lgn != null && psw != null && !lgn.isEmpty() && !psw.isEmpty()) {
-//        try {
-//          String nick = serverService.authorization(lgn, psw);
-//          authLabel.setText("Online, nick " + nick);
-//        } catch (IOException e) {
-//          e.printStackTrace();
-//        }
-//
-//        new Thread(() -> {
-//          while (true) {
-//            printToUI(mainChat, serverService.readMessages());
-//          }
-//        }).start();
-//
-//      }
-//    });
-//
-//    add(login);
-//    add(password);
-//    add(authButton);
-//    add(authLabel);
-//
-//  }
+  private void initLoginPanel(JTextArea mainChat) {
+    JTextField login = new JTextField();
+    login.setToolTipText("Логин");
+    JPasswordField password = new JPasswordField();
+    password.setToolTipText("Пароль");
+    JButton authButton = new JButton("Авторизоваться");
+
+    JLabel authLabel = new JLabel("Offline");
+
+    authButton.addActionListener(actionEvent -> {
+      String lgn = login.getText();
+      String psw = new String(password.getPassword());
+
+      if (lgn != null && psw != null && !lgn.isEmpty() && !psw.isEmpty()) {
+        try {
+          String nick = serverService.authorization(lgn, psw);
+          authLabel.setText("Online, nick " + nick);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        new Thread(() -> {
+          while (true) {
+            printToUI(mainChat, serverService.readMessages());
+          }
+        }).start();
+
+      }
+    });
+
+    add(login);
+    add(password);
+    add(authButton);
+    add(authLabel);
+
+  }
 
   private void sendMessage(JTextField myMessage) {
     serverService.sendMessage(myMessage.getText());

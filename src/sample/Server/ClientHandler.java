@@ -51,6 +51,8 @@ public class ClientHandler {
         String nick = myServer.getAuthService().getNickByLoginAndPass(message.getLogin(), message.getPassword());
         if (nick != null && !myServer.isNickBusy(nick)) {
           message.setAuthenticated(true);
+          message.setNick(nick);
+          this.nick = nick;
           dataOutputStream.writeUTF(new Gson().toJson(message));
           Message broadcastMsg = new Message();
           broadcastMsg.setMessage(nick + " вошел в чат");
@@ -60,8 +62,8 @@ public class ClientHandler {
           return;
         }
 
-      } catch (IOException e) {
-        e.printStackTrace();
+      } catch (IOException ignored) {
+        // e.printStackTrace();
       }
     }
   }
@@ -86,10 +88,10 @@ public class ClientHandler {
       String[] tokens = message.getMessage().split("\\s");
       //Первая чать сообщения до пробела
       switch (tokens[0]) {
-        case "/end": {
+        case "/end" -> {
           return;
         }
-        case "/w": { //пример сообщения - /w никнеймПользователя телоСообщения
+        case "/w" -> { //пример сообщения - /w никнеймПользователя телоСообщения
           //соответственно это 3 элемента массива tokens
           //и меньше 3х не должно быть, если это не так говорим об этом пользователю
           if (tokens.length < 3) {
@@ -101,9 +103,8 @@ public class ClientHandler {
           String nick = tokens[1];
           String msg = tokens[2];
           myServer.sendMsgToClient(this, nick, msg);
-          break;
+          //break;
         }
-
       }
 
     }
