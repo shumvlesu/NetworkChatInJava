@@ -42,7 +42,7 @@ public class ClientHandler {
 
   }
 
-  //метод послыает сообщение клиенту
+
   //Метод авторизации клиента
   private void authentication() {
     while (true) {
@@ -110,6 +110,7 @@ public class ClientHandler {
     }
   }
 
+  //метод послыает сообщение клиенту
   public void sendMessage(Message message) {
     try {
       dataOutputStream.writeUTF(new Gson().toJson(message));
