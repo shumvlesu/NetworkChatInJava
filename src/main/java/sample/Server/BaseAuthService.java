@@ -11,15 +11,20 @@ public class BaseAuthService implements AuthService {
 
   public BaseAuthService() {
 
+      if (DBConnector.createDB()){
+        DBConnector.createNewUser("ivan", "123", "Neivanov");
+        DBConnector.createNewUser("sharik", "111", "Gav");
+        DBConnector.createNewUser("cat", "321", "murzik");
+      };
 
-     System.out.println(DBConnector.createDB());
-
+      //закоментить
       entries = new ArrayList<>();
       entries.add(new Entry("ivan", "123", "Neivanov"));
       entries.add(new Entry("sharik", "111", "Gav"));
       entries.add(new Entry("cat", "321", "murzik"));
   }
 
+  //закоментить
   private class Entry{
 
     private String login;
