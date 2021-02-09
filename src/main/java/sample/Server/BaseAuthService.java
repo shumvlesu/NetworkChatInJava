@@ -13,8 +13,8 @@ public class BaseAuthService implements AuthService {
 
       if (DBConnector.createDB()){
         DBConnector.createNewUser("ivan", "123", "Neivanov");
-        DBConnector.createNewUser("sharik", "111", "Gav");
-        DBConnector.createNewUser("cat", "321", "murzik");
+       // DBConnector.createNewUser("sharik", "111", "Gav");
+       // DBConnector.createNewUser("cat", "321", "murzik");
       };
 
       //закоментить
