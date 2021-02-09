@@ -11,7 +11,8 @@ public class BaseAuthService implements AuthService {
 
   public BaseAuthService() {
 
-      System.out.println(DBConnector.createDB());
+
+     System.out.println(DBConnector.createDB());
 
       entries = new ArrayList<>();
       entries.add(new Entry("ivan", "123", "Neivanov"));
