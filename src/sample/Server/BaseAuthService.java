@@ -1,5 +1,7 @@
 package sample.Server;
 
+import sample.DB.DBConnector;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +10,9 @@ public class BaseAuthService implements AuthService {
   private List<Entry> entries;
 
   public BaseAuthService() {
+
+      System.out.println(DBConnector.createDB());
+
       entries = new ArrayList<>();
       entries.add(new Entry("ivan", "123", "Neivanov"));
       entries.add(new Entry("sharik", "111", "Gav"));
