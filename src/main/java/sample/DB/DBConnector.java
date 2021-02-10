@@ -1,6 +1,10 @@
 package sample.DB;
 
+import sample.Server.BaseAuthService;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DBConnector {
   public static final String TABLE_NAME = "users";
@@ -31,11 +35,11 @@ public class DBConnector {
     connectToDB();
     try {
       statement = conn.createStatement();
-      //ник должен быть уникальным
+      //login должен быть уникальным
       statement.execute("CREATE TABLE IF NOT EXISTS '" + TABLE_NAME + "' (\n" +
-              "\t 'nick' VARCHAR(500) PRIMARY KEY NOT NULL COLLATE NOCASE,\n" +
+              "\t 'nick' VARCHAR(500) NOT NULL COLLATE NOCASE,\n" +
               "\t 'password' VARCHAR(500) NOT NULL COLLATE NOCASE,\n" +
-              "\t 'login' VARCHAR(500) NOT NULL COLLATE NOCASE\n" +
+              "\t 'login' VARCHAR(500) PRIMARY KEY NOT NULL COLLATE NOCASE\n" +
               ");\n");
 
       //проверяю что таблица создана
@@ -83,5 +87,28 @@ public class DBConnector {
     }
 
   }
+
+  public static <S>String[] getUserInDB(String login){
+    connectToDB();
+    try {
+      PreparedStatement preparedStatement = conn.prepareStatement("select * from "+TABLE_NAME+" where login = ?");
+      preparedStatement.setString(1,login);
+      ResultSet resultSet = preparedStatement.executeQuery();
+      if (resultSet.next()){
+        return new String[] {resultSet.getString("login"), resultSet.getString("password"), resultSet.getString("nick")};
+      }else {
+        return new String[0];
+      }
+    } catch (SQLException throwables) {
+      throwables.printStackTrace();
+    }finally {
+      disconnectToDB();
+    }
+    return new String[0];
+  }
+
+
+
+
 
 }
