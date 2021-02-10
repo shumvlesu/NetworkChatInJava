@@ -4,14 +4,24 @@ import java.sql.*;
 
 public class DBConnector {
   public static final String TABLE_NAME = "users";
+  public static final String PATH = "jdbc:sqlite:src/main/java/sample/DB/Accounts.s3db";
 
   private static Connection conn;
   private static Statement statement;
 
   public static void connectToDB() {
     try { //схема БД - testBD.s3db
-      conn = DriverManager.getConnection("jdbc:sqlite:src/main/java/sample/DB/Accounts.s3db");
+      conn = DriverManager.getConnection(PATH);
     } catch (SQLException throwables) {
+      throwables.printStackTrace();
+    }
+  }
+
+  public static void disconnectToDB (){
+    try {
+      statement.close();
+      conn.close();
+    }catch (SQLException throwables) {
       throwables.printStackTrace();
     }
   }
@@ -21,10 +31,11 @@ public class DBConnector {
     connectToDB();
     try {
       statement = conn.createStatement();
+      //ник должен быть уникальным
       statement.execute("CREATE TABLE IF NOT EXISTS '" + TABLE_NAME + "' (\n" +
-              "\t 'login' VARCHAR(500) PRIMARY KEY NOT NULL COLLATE NOCASE,\n" +
+              "\t 'nick' VARCHAR(500) PRIMARY KEY NOT NULL COLLATE NOCASE,\n" +
               "\t 'password' VARCHAR(500) NOT NULL COLLATE NOCASE,\n" +
-              "\t 'nick' VARCHAR(500) NOT NULL COLLATE NOCASE\n" +
+              "\t 'login' VARCHAR(500) NOT NULL COLLATE NOCASE\n" +
               ");\n");
 
       //проверяю что таблица создана
@@ -34,14 +45,18 @@ public class DBConnector {
       while (databases.next()) {
         String databaseName = databases.getString(3);
         if (databaseName.equalsIgnoreCase(TABLE_NAME)) {
-          statement.close();
+         // disconnectToDB ();
           return true;
         }
       }
+      //disconnectToDB ();
       return false;
     } catch (SQLException throwables) {
+      //disconnectToDB ();
       throwables.printStackTrace();
       return false;
+    }finally {
+      disconnectToDB();
     }
 
   }
@@ -49,14 +64,22 @@ public class DBConnector {
   public static void createNewUser(String login, String password, String nick) {
     connectToDB();
     try {
-      PreparedStatement preparedStatement = conn.prepareStatement("insert into "+TABLE_NAME+" (login,password,nick) values(?,?,?)");
-      //preparedStatement.setString(1, TABLE_NAME);
+      //PreparedStatement preparedStatement = conn.prepareStatement("select * from students where Score > ?");
+
+      //Вопрос преподователю: Какой способ подставления TABLE_NAME более предпочтителен или разницы нет? Или есть более лучший способ? С "?" у меня не получилось.
+      //PreparedStatement preparedStatement = conn.prepareStatement("insert into "+TABLE_NAME+" (login,password,nick) values(?,?,?)");
+      String strQuery = "insert into $tableName (login,password,nick) values(?,?,?)";
+      String query =strQuery.replace("$tableName",TABLE_NAME);
+      PreparedStatement preparedStatement = conn.prepareStatement(query);
       preparedStatement.setString(1, login);
       preparedStatement.setString(2, password);
       preparedStatement.setString(3, nick);
       preparedStatement.execute();
+
     } catch (SQLException throwables) {
       throwables.printStackTrace();
+    }finally {
+      disconnectToDB();
     }
 
   }
