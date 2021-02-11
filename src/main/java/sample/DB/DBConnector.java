@@ -108,7 +108,28 @@ public class DBConnector {
   }
 
 
+  public static String changeNick(String oldNick,String newNick) {
+    connectToDB();
+    try {
 
+      String sql = "update "+TABLE_NAME+" set nick=? where nick=?";
+      PreparedStatement preparedStatement = conn.prepareStatement(sql);
+      preparedStatement.setString(1, newNick);
+      preparedStatement.setString(2, oldNick);
+      int rowsAffected = preparedStatement.executeUpdate();
+      if (rowsAffected > 0){
+        return "Данные изменены в БД";
+      }else {
+        return "Данные не были найдены в БД";
+      }
+
+    } catch (SQLException throwables) {
+      throwables.printStackTrace();
+    }finally {
+      disconnectToDB();
+    }
+    return "";
+  }
 
 
 }

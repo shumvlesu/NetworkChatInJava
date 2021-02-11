@@ -5,13 +5,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="sample.Controller" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <Label text="Старый логин" />
-      <TextField />
-      <Label text="Новый логин" />
-      <TextField />
-      <Button mnemonicParsing="false" text="Изменить" />
+      <Label fx:id="information" alignment="TOP_CENTER" contentDisplay="CENTER" />
+      <Label text="Старый ник" />
+      <TextField fx:id="oldNick" />
+      <Label text="Новый ник" />
+      <TextField fx:id="newNick" />
+      <Button fx:id="button" mnemonicParsing="false" onAction="#onChangeNick" text="Изменить" />
    </children>
 </VBox>

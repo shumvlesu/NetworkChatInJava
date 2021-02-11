@@ -20,7 +20,7 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        new MyServer();
+        //new MyServer();
         launch(args);
     }
 }
